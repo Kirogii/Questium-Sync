@@ -26,16 +26,22 @@ android {
     namespace = "eu.kanade.tachiyomi"
 
     defaultConfig {
-        applicationId = "app.komikku"
+        // KMK -->
+        applicationId = "app.questium.sync"
+        // KMK <--
 
-        versionCode = 82
-        versionName = "1.14.1"
+        // KMK -->
+        versionCode = 1
+        versionName = providers.environmentVariable("QUESTIUM_SYNC_VERSION").map { it.removePrefix("v") }.getOrElse("1.0.0")
+        // KMK <--
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")
         buildConfigField("String", "COMMIT_SHA", "\"${getGitSha()}\"")
         buildConfigField("String", "BUILD_TIME", "\"${getBuildTime(useLastCommitTime = false)}\"")
         buildConfigField("boolean", "TELEMETRY_INCLUDED", "${Config.includeTelemetry}")
-        buildConfigField("boolean", "UPDATER_ENABLED", "${Config.enableUpdater}")
+        // KMK --> Update checks always target this fork.
+        buildConfigField("boolean", "UPDATER_ENABLED", "true")
+        // KMK <--
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

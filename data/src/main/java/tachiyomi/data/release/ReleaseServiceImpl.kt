@@ -74,7 +74,8 @@ class ReleaseServiceImpl(
     // KMK <--
 
     private fun getDownloadLink(release: GithubRelease, isFoss: Boolean): String? {
-        val map = release.assets.associate { asset ->
+        // KMK --> Exclude checksums and other release attachments from APK selection.
+        val map = release.assets.filter { it.name.endsWith(".apk", ignoreCase = true) }.associate { asset ->
             BUILD_TYPES.find { "-$it" in asset.name } to asset.downloadLink
         }
 

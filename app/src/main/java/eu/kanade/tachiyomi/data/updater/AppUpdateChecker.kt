@@ -36,7 +36,9 @@ class AppUpdateChecker(
             val result = getApplicationRelease.await(
                 GetApplicationRelease.Arguments(
                     isFoss = isFossBuildType,
-                    isPreview = isPreviewBuildType || peekIntoPreview,
+                    // KMK --> Both forks publish stable semantic-version tags.
+                    isPreview = false,
+                    // KMK <--
                     commitCount = BuildConfig.COMMIT_COUNT.toInt(),
                     versionName = BuildConfig.VERSION_NAME,
                     repository = getGithubRepo(peekIntoPreview),
@@ -82,7 +84,9 @@ class AppUpdateChecker(
             getApplicationRelease.awaitReleaseNotes(
                 GetApplicationRelease.Arguments(
                     isFoss = isFossBuildType,
-                    isPreview = isPreviewBuildType || peekIntoPreview,
+                    // KMK --> Both forks publish stable semantic-version tags.
+                    isPreview = false,
+                    // KMK <--
                     commitCount = BuildConfig.COMMIT_COUNT.toInt(),
                     versionName = BuildConfig.VERSION_NAME,
                     repository = getGithubRepo(peekIntoPreview),
@@ -95,20 +99,14 @@ class AppUpdateChecker(
 
 val GITHUB_REPO: String by lazy { getGithubRepo() }
 
-fun getGithubRepo(peekIntoPreview: Boolean = false): String =
-    if (isPreviewBuildType || peekIntoPreview) {
-        "komikku-app/komikku-preview"
-    } else {
-        "komikku-app/komikku"
-    }
+// KMK -->
+fun getGithubRepo(peekIntoPreview: Boolean = false): String = "Kirogii/Questium-Sync"
+// KMK <--
 
 val RELEASE_TAG: String by lazy { getReleaseTag() }
 
-fun getReleaseTag(peekIntoPreview: Boolean = false): String =
-    if (isPreviewBuildType || peekIntoPreview) {
-        "r${BuildConfig.COMMIT_COUNT}"
-    } else {
-        "v${BuildConfig.VERSION_NAME}"
-    }
+// KMK -->
+fun getReleaseTag(peekIntoPreview: Boolean = false): String = "v${BuildConfig.VERSION_NAME.substringBefore('-')}"
+// KMK <--
 
 val RELEASE_URL = "https://github.com/$GITHUB_REPO/releases/tag/$RELEASE_TAG"

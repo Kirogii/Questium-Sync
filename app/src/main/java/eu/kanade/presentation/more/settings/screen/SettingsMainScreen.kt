@@ -183,6 +183,9 @@ object SettingsMainScreen : Screen() {
     )
 
     private val items = listOf(
+        // KMK -->
+        Item(KMR.strings.questium_sync, KMR.strings.questium_sync_priority, icon = Icons.Outlined.Sync, screen = SettingsQuestiumSyncScreen),
+        // KMK <--
         Item(
             titleRes = MR.strings.pref_category_appearance,
             subtitleRes = MR.strings.pref_appearance_summary,

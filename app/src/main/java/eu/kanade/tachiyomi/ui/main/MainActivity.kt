@@ -199,6 +199,11 @@ class MainActivity : BaseActivity() {
         val splashScreen = if (isLaunch) installSplashScreen() else null
 
         super.onCreate(savedInstanceState)
+        // KMK --> Resume the user-enabled endpoint after a reboot or process stop.
+        if (Injekt.get<tachiyomi.core.common.preference.PreferenceStore>().getBoolean(eu.kanade.tachiyomi.data.questiumsync.SyncSettingKeys.ENABLED, false).get()) {
+            eu.kanade.tachiyomi.data.questiumsync.QuestiumSync.get(this).setEnabled(true)
+        }
+        // KMK <--
 
         val didMigration = if (isLaunch) {
             Migrator.awaitAndRelease()

@@ -150,4 +150,21 @@ class GetApplicationReleaseTest {
         coVerify(exactly = 0) { releaseService.releaseNotes(any()) }
         result shouldBe GetApplicationRelease.Result.NoNewUpdate
     }
+
+    @Test
+    fun `fork semantic versions ignore build suffix and missing components`() = runTest {
+        every { preference.get() } returns 0
+        every { preference.set(any()) }.answers { }
+        for ((current, latest, expected) in listOf(
+            Triple("1.0.0-12345", "v1.0.1", true),
+            Triple("1.0.0-12345", "v1.0.0", false),
+            Triple("1.0.1", "v1.0", false),
+            Triple("1.0", "v1.0.1", true),
+            Triple("2.0.0", "v1.9.9", false),
+        )) {
+            coEvery { releaseService.releaseNotes(any()) } returns listOf(Release(latest, "", "", ""))
+            val result = getApplicationRelease.await(GetApplicationRelease.Arguments(false, false, 0, current, "Kirogii/Questium-Sync", forceCheck = true))
+            (result is GetApplicationRelease.Result.NewUpdate) shouldBe expected
+        }
+    }
 }

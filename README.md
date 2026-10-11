@@ -1,193 +1,43 @@
-<div align="center">
+# Questium Sync v1.0.0
 
-<a href="https://komikku-app.github.io">
-  <img width=200px height=200px src="./.github/readme-images/app-icon.png"/>
-</a><br/>
-<a href="https://trendshift.io/repositories/13696" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13696" alt="komikku-app%2Fkomikku | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
- <h1 align="center"> Komikku </h1>
+Questium Sync is a **Komikku fork for syncing your manga library with [Questium](https://github.com/Kirogii/Questium)** on Meta Quest. Questium itself remains based on Houri. The Android companion retains Komikku's reader, extension support and backup compatibility, and installs separately from Komikku.
 
-| Releases | Preview |
-|----------|---------|
-| <div align="center"> [![GitHub downloads](https://img.shields.io/github/downloads/komikku-app/komikku/latest/total?label=Latest%20Downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/komikku-app/komikku/releases/latest) [![GitHub downloads](https://img.shields.io/github/downloads/komikku-app/komikku/total?label=Total%20Downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/komikku-app/komikku/releases) [![Stable build](https://img.shields.io/github/actions/workflow/status/komikku-app/komikku/build_release.yml?labelColor=27303D&label=Stable&labelColor=06599d&color=043b69)](https://github.com/komikku-app/komikku/actions/workflows/build_release.yml) | <div align="center"> [![GitHub downloads](https://img.shields.io/github/downloads/komikku-app/komikku-preview/latest/total?label=Latest%20Downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/komikku-app/komikku-preview/releases/latest) [![GitHub downloads](https://img.shields.io/github/downloads/komikku-app/komikku-preview/total?label=Total%20Downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/komikku-app/komikku-preview/releases) [![Preview build](https://img.shields.io/github/actions/workflow/status/komikku-app/komikku-preview/build_app.yml?labelColor=27303D&label=Preview&labelColor=2c2c47&color=1c1c39)](https://github.com/komikku-app/komikku-preview/actions/workflows/build_app.yml) |
+## Pair and sync
 
-*Requires Android 8.0 or higher.*
+1. Connect the Android phone and Quest to the same Wi-Fi network. Open **Settings → Questium Sync** on Android; open **Settings → Questium Settings → Questium Sync** in Questium.
+2. Enable Questium Sync on both. Android displays a persistent notification while the local endpoint is enabled.
+3. Turn on **Main sync device** on the Android companion only. Copy one device's pairing link into the other device's Pairing link field and select **Pair device**. Treat the complete pairing link as a password; it is replaced after pairing.
+4. Select one or more paired devices and choose **Sync selected devices**. The main Android device reads the selected libraries, merges them and sends the result to every selected device. All selected devices must be reachable.
 
-[![Discord](https://img.shields.io/discord/1242381704459452488.svg?label=&labelColor=6A7EC2&color=7389D8&logo=discord&logoColor=FFFFFF)](https://discord.gg/85jB7V5AJR)
-[![CI](https://img.shields.io/github/actions/workflow/status/komikku-app/komikku/build_push.yml?labelColor=27303D&label=CI)](https://github.com/komikku-app/komikku/actions/workflows/build_push.yml)
-[![License: Apache-2.0](https://img.shields.io/github/license/komikku-app/komikku?labelColor=27303D&color=0877d2)](/LICENSE)
-[![Translation status](https://img.shields.io/weblate/progress/komikku-app?labelColor=27303D&color=946300)](https://hosted.weblate.org/engage/komikku-app/)
+Main-device metadata, library membership and categories take precedence for books already known to the main device. Newly discovered books are imported uncategorized. Reading progress keeps each chapter's furthest page/read state, so Quest chapter 20 advances an Android copy at chapter 10. Sources must use the same source ID and manga URL on both devices; matching titles alone are never combined. Install the corresponding source extensions on each device; sync does not transfer extension APKs, downloaded pages or login credentials.
 
-## Download
+## Did you want this change? / Revert
 
-[![Stable](https://img.shields.io/github/release/komikku-app/komikku.svg?maxAge=3600&label=Stable&labelColor=06599d&color=043b69)](https://github.com/komikku-app/komikku/releases/latest)
-[![Preview](https://img.shields.io/github/v/release/komikku-app/komikku-preview.svg?maxAge=3600&label=Preview&labelColor=2c2c47&color=1c1c39)](https://github.com/komikku-app/komikku-preview/releases/latest)
+The main Android device keeps a durable per-manga change log in the **Revert** tab before applying reading progress. Choose the manga's change to restore its previous chapter/page state and reading history. Then sync to update selected devices. A deliberate revert starts a new progress revision so old progress from an offline device cannot immediately undo it. Reading on an offline device before it receives that revision is intentionally superseded by the revert.
 
-*Requires Android 8.0 or higher.*
+## Cloud backups
 
-[![Sponsor me on GitHub](https://custom-icon-badges.demolab.com/badge/-Sponsor-ea4aaa?style=for-the-badge&logo=heart&logoColor=white)](https://github.com/sponsors/cuong-tran "Sponsor me on GitHub")
+The **Cloud backups** tab creates a standard `.tachibk` library backup and opens **Google Drive** or **Proton Drive** to upload it. Install the selected provider app, sign in, and confirm its destination/upload. These are manual uploads using your account's available storage; Questium Sync does not need your cloud password or a paid backend. Restore through Komikku's normal Data and storage backup restore screen. Device pairing keys and the local Revert journal stay in app-private storage and are not included in ordinary backups.
 
-<div align="left">
-A free and open source manga reader which is based off TachiyomiSY & Mihon/Tachiyomi. This fork is meant to provide new & useful features while regularly take features/updates from Mihon or other forks like SY, J2K and Neko...
+## Background operation
 
-![screenshots of app](./.github/readme-images/screens.png)
+The endpoint uses a blocking local socket rather than polling your library. No library database scan or backup is performed while waiting; transfer work and database reads start only after an authenticated request. Disable the switch or press **Stop** in the notification to close it. There is no permanent wake lock. Android's battery-saving/Doze behavior and Wi-Fi client isolation may make a sleeping device unreachable; open the companion and retry. Pair again if the main device's IP changes. The first implementation supports local IPv4, up to two active connections and a 32 MiB encrypted metadata payload. It does not expose a public internet endpoint.
 
-<div align="left">
+## Updates
 
-## Features
+App updates check only [Kirogii/Questium-Sync releases](https://github.com/Kirogii/Questium-Sync/releases), including debug/preview checks. Komikku release feeds are not used. Install the signed stable APK to receive future in-place updates.
 
-### Komikku's unique features:
-- `Suggestions` automatically showing source-website's recommendations / suggestions / related to current entry for all sources.
-- `Hidden categories` to hide yours things from *nosy* people.
-- `Auto theme color` based on each entry's cover for entry View & Reader.
-- `App custom theme` with `Color palettes` for endless color lover.
-- `Bulk-favorite` multiple entries all at once.
-- Source & Language icon on Library & various places. (Some language flags are not really accurate)
-- `Feed` now supports **all** sources, with more items (20 for now).
-- Fast browsing (for who with large library experiencing slow loading)
-- Grouped entries in Update tab (inspired by J2K).
-- Update notification with manga cover.
-- Auto `2-way sync` progress with trackers.
-- Chips for `Saved search` in source browse
-- `Panorama cover` showing wide cover in full.
-- `Merge multiple` library entries together at same time.
-- `Range-selection` for Migration.
-- Ability to `enable/disable repo`, with icon.
-- `Update Error` screen & migrating them away.
-- `to-be-updated` screen: which entries are going to be checked with smart-update?
-- `Search for sources` & Quick NSFW sources filter in Extensions, Browse & Migration screen.
-- `Feed` backup/restore/sync/re-order.
-- Long-click to add/remove single entry to/from library, everywhere.
-- Docking Read/Resume button to left/right.
-- In-app progress banner shows Library syncing / Backup restoring / Library updating progress.
-- Auto-install app update.
-- Configurable interval to refresh entries from downloaded storage.
-- Forked from SY so everything from SY.
-- Always up-to-date with Mihon & SY
-- More app themes & better UI, improvements...
+## Build
 
+Use JDK 21 and Android SDK 36. Run `./gradlew spotlessApply`, `./gradlew spotlessCheck`, then `./gradlew assembleDebug`. Run the sync merge/encrypted transport tests with `./gradlew :app:testDebugUnitTest --tests "*.QuestiumSyncTest"`. The application ID is `app.questium.sync` (`.dev` for debug builds).
 
-<details>
-  <summary>Features from Mihon / Tachiyomi</summary>
+## Download and support
 
-#### All up-to-date features from Mihon / Tachiyomi (original), include:
+Download the signed APK from [Questium Sync releases](https://github.com/Kirogii/Questium-Sync/releases/latest). Choose `arm64-v8a` for most modern Android phones, or the universal APK if unsure. Report fork-specific problems in [Questium Sync issues](https://github.com/Kirogii/Questium-Sync/issues).
 
-* Online reading from a variety of sources
-* Local reading of downloaded content
-* A configurable reader with multiple viewers, reading directions and other settings.
-* Tracker support: [MyAnimeList](https://myanimelist.net/), [AniList](https://anilist.co/), [Kitsu](https://kitsu.app/), [MangaUpdates](https://mangaupdates.com), [Shikimori](https://shikimori.one), [Bangumi](https://bgm.tv/)
-* Categories to organize your library
-* Light and dark themes
-* Schedule updating your library for new chapters
-* Create backups locally to read offline or to your desired cloud service
-* Continue reading button in library
+## Credits
 
-</details>
-
-<details>
-  <summary>Features from Tachiyomi SY</summary>
-
-#### All features from TachiyomiSY:
-* Feed tab, where you can easily view the latest entries or saved search from multiple sources at same time.
-* Automatic webtoon detection, allowing the reader to switch to webtoon mode automatically when viewing one
-* Manga recommendations, uses MAL and Anilist, as well as Neko Similar Manga for Mangadex manga (Thanks to Az, She11Shocked, Carlos, and Goldbattle)
-* Lewd filter, hide the lewd manga in your library when you want to
-* Tracking filter, filter your tracked manga so you can see them or see non-tracked manga, made by She11Shocked
-* Search tracking status in library, made by She11Shocked
-* Custom categories for sources, liked the pinned sources, but you can make your own versions and put any sources in them
-* Manga info edit
-* Manga Cover view + share and save
-* Dynamic Categories, view the library in multiple ways
-* Smart background for reading modes like LTR or Vertical, changes the background based on the page color
-* Force disable webtoon zoom
-* Hentai features enable/disable, in advanced settings
-* Quick clean titles
-* Source migration, migrate all your manga from one source to another
-* Saving searches
-* Autoscroll
-* Page preload customization
-* Customize image cache size
-* Batch import of custom sources and featured extensions
-* Advanced source settings page, searching, enable/disable all
-* Click tag for local search, long click tag for global search
-* Merge multiple of the same manga from different sources
-* Drag and drop library sorting
-* Library search engine, includes exclude, quotes as absolute, and a bunch of other ways to search
-* New E-Hentai/ExHentai features, such as language settings and watched list settings
-* Enhanced views for internal and integrated sources
-* Enhanced usability for internal and delegated sources
-
-Custom sources:
-* E-Hentai/ExHentai
-
-Additional features for some extensions, features include custom description, opening in app, batch add to library, and a bunch of other things based on the source:
-* 8Muses (EroMuse)
-* Mangadex
-* NHentai
-* Puruin
-* LANraragi
-
-</details>
-
-## Issues, Feature Requests and Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-<details><summary>Issues</summary>
-
-[Website](https://komikku-app.github.io/)
-
-1. **Before reporting a new issue, take a look at the [FAQ](https://komikku-app.github.io/docs/faq/general), the [changelog](https://github.com/komikku-app/komikku/releases) and the already opened [issues](https://github.com/komikku-app/komikku/issues).**
-2. If you are unsure, ask here: [![Discord](https://img.shields.io/discord/1242381704459452488.svg?label=&labelColor=6A7EC2&color=7389D8&logo=discord&logoColor=FFFFFF)](https://discord.gg/85jB7V5AJR)
-
-</details>
-
-<details><summary>Bugs</summary>
-
-* Include version (More → About → Version)
- * If not latest, try updating, it may have already been solved
- * Preview version is equal to the number of commits as seen on the main page
-* Include steps to reproduce (if not obvious from description)
-* Include screenshot (if needed)
-* If it could be device-dependent, try reproducing on another device (if possible)
-* Don't group unrelated requests into one issue
-
-Use the [issue forms](https://github.com/komikku-app/komikku/issues/new/choose) to submit a bug.
-
-</details>
-
-<details><summary>Feature Requests</summary>
-
-* Write a detailed issue, explaining what it should do or how.
-* Include screenshot (if needed).
-</details>
-
-<details><summary>Contributing</summary>
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
-</details>
-
-<details><summary>Code of Conduct</summary>
-
-See [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
-</details>
-
-<div align="center">
-
-### Credits
-
-Thank you to all the people who have contributed!
-
-<a href="https://github.com/komikku-app/komikku/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=komikku-app/komikku" alt="Komikku app contributors" title="Komikku app contributors" width="800"/>
-</a>
-
-![Visitor Count](https://count.getloli.com/get/@komikku-app?theme=capoo-2)
-
-### Disclaimer
-
-The developer(s) of this application does not have any affiliation with the content providers available, and this application hosts zero content.
-
-<div align="left">
+Based on [Komikku](https://github.com/komikku-app/komikku), with its Mihon, Tachiyomi and TachiyomiSY heritage. Thank you to the [original contributors](https://github.com/komikku-app/komikku/graphs/contributors). Original copyright and license notices remain in the source and [LICENSE](LICENSE).
 
 ## License
 

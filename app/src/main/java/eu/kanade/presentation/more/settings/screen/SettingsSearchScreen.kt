@@ -51,6 +51,7 @@ import eu.kanade.presentation.components.UpIcon
 import eu.kanade.presentation.more.settings.Preference
 import eu.kanade.presentation.util.Screen
 import tachiyomi.i18n.MR
+import tachiyomi.i18n.kmk.KMR
 import tachiyomi.presentation.core.components.material.Scaffold
 import tachiyomi.presentation.core.i18n.stringResource
 import tachiyomi.presentation.core.screens.EmptyScreen
@@ -286,6 +287,9 @@ private fun getLocalizedBreadcrumb(path: String, node: String?, isLtr: Boolean):
 }
 
 private val settingScreens = listOf(
+    // KMK -->
+    SettingsQuestiumSyncScreen,
+    // KMK <--
     SettingsAppearanceScreen,
     SettingsLibraryScreen,
     SettingsReaderScreen,
