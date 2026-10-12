@@ -1,4 +1,6 @@
-# Questium Sync v1.0.0
+# Questium Sync v1.0.1 — Slight minor update
+
+- Remove the 32 MiB hard limit from Questium Sync payloads; larger libraries can sync within the wire protocol's framing limits.
 
 First Questium Sync release, based on Komikku.
 
