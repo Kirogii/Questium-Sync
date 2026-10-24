@@ -1,4 +1,4 @@
-# Questium Sync v1.0.1 — Slight minor update
+# Questium Reader v1.1.0
 
 - Remove the 32 MiB hard limit from Questium Sync payloads; larger libraries can sync within the wire protocol's framing limits.
 
@@ -13,3 +13,9 @@ First Questium Sync release, based on Komikku.
 - Check updates only from Kirogii/Questium-Sync. Upstream Komikku tags are removed; this fork starts at v1.0.0.
 
 Initial release: two-device Android/Quest testing and cloud-provider upload confirmation still need real-device validation.
+
+- Compress Questium Sync transfers with maximum gzip compression and no 5 MB cutoff. Sync only reading history/progress and library membership, with a checked-by-default option to sync new books to the main device. Update both devices for the new protocol.
+
+- Sync extension repositories before missing extensions, and keep per-device JSON checkpoints so repeat syncs transfer changed chapter progress instead of the whole library.
+
+- Use the same Questium launcher and themed icon as the VR reader.

@@ -34,6 +34,7 @@ import kotlinx.coroutines.delay
 import tachiyomi.core.common.preference.CheckboxState
 import tachiyomi.domain.category.model.Category
 import tachiyomi.i18n.MR
+import tachiyomi.i18n.kmk.KMR
 import tachiyomi.presentation.core.components.material.padding
 import tachiyomi.presentation.core.i18n.stringResource
 import kotlin.time.Duration.Companion.seconds
@@ -225,8 +226,12 @@ fun ChangeCategoryDialog(
     onDismissRequest: () -> Unit,
     onEditCategories: () -> Unit,
     onConfirm: (List<Long>, List<Long>) -> Unit,
+    // KMK -->
+    onSyncToMain: ((Boolean) -> Unit)? = null,
+    // KMK <--
 ) {
-    if (initialSelection.isEmpty()) {
+    var syncToMain by remember { mutableStateOf(true) }
+    if (initialSelection.isEmpty() && onSyncToMain == null) {
         AlertDialog(
             onDismissRequest = onDismissRequest,
             confirmButton = {
@@ -265,6 +270,7 @@ fun ChangeCategoryDialog(
                 }
                 tachiyomi.presentation.core.components.material.TextButton(
                     onClick = {
+                        onSyncToMain?.invoke(syncToMain)
                         onDismissRequest()
                         onConfirm(
                             selection
@@ -287,6 +293,14 @@ fun ChangeCategoryDialog(
             Column(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
             ) {
+                // KMK -->
+                if (onSyncToMain != null) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = syncToMain, onCheckedChange = { syncToMain = it })
+                        Text(text = stringResource(KMR.strings.questium_sync_to_main_device))
+                    }
+                }
+                // KMK <--
                 selection.forEach { checkbox ->
                     val onChange: (CheckboxState<Category>) -> Unit = {
                         val index = selection.indexOf(it)

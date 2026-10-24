@@ -479,7 +479,12 @@ data class BrowseSourceScreen(
             }
             is BrowseSourceScreenModel.Dialog.ChangeMangaCategory -> {
                 ChangeCategoryDialog(
-                    initialSelection = dialog.initialSelection,
+                    initialSelection = dialog.initialSelection, // KMK -->
+                    onSyncToMain = { syncToMain ->
+                        eu.kanade.tachiyomi.data.questiumsync.QuestiumSync.get(context)
+                            .setLibrarySync(dialog.manga.source, dialog.manga.url, syncToMain)
+                    },
+                    // KMK <--
                     onDismissRequest = onDismissRequest,
                     onEditCategories = { navigator.push(CategoryScreen()) },
                     onConfirm = { include, _ ->

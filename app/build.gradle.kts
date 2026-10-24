@@ -31,8 +31,8 @@ android {
         // KMK <--
 
         // KMK -->
-        versionCode = 1
-        versionName = providers.environmentVariable("QUESTIUM_SYNC_VERSION").map { it.removePrefix("v") }.getOrElse("1.0.0")
+        versionCode = 2
+        versionName = providers.environmentVariable("QUESTIUM_SYNC_VERSION").map { it.removePrefix("v") }.getOrElse("1.1.0")
         // KMK <--
 
         buildConfigField("String", "COMMIT_COUNT", "\"${getCommitCount()}\"")

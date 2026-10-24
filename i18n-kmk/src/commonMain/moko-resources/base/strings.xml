@@ -288,4 +288,5 @@
     <string name="questium_sync_waiting_for_paired_devices">Waiting for paired devices</string>
     <string name="questium_sync_main_label">Main</string>
     <string name="questium_sync_failed">Sync failed</string>
+    <string name="questium_sync_to_main_device">Sync to main device</string>
 </resources>
