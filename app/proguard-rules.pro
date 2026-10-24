@@ -314,3 +314,8 @@
 -dontwarn org.ietf.jgss.Oid
 -dontwarn com.google.re2j.Matcher
 -dontwarn com.google.re2j.Pattern
+
+# KMK --> Optional OEM implementations are supplied by the device; AndroidX probes their presence.
+-dontwarn androidx.window.extensions.**
+-dontwarn androidx.window.sidecar.**
+# KMK <--

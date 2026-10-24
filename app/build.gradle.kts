@@ -335,7 +335,11 @@ dependencies {
 
     // RatingBar (SY)
     implementation(sylibs.ratingbar)
-    implementation(sylibs.composeRatingbar)
+    // KMK --> The rating widget publishes the build-time Compose compiler as a runtime dependency.
+    implementation(sylibs.composeRatingbar) {
+        exclude(group = "androidx.compose.compiler")
+    }
+    // KMK <--
 
     // Google drive
     implementation(sylibs.google.api.services.drive)
