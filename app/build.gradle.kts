@@ -31,7 +31,7 @@ android {
         // KMK <--
 
         // KMK -->
-        versionCode = 2
+        versionCode = 3
         versionName = providers.environmentVariable("QUESTIUM_SYNC_VERSION").map { it.removePrefix("v") }.getOrElse("1.1.0")
         // KMK <--
 
